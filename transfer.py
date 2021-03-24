@@ -221,17 +221,26 @@ def perform_transfers_via_selenium(transfer_items):
     Perform appropriate transfers for cases in transfer_items using Selenium webdriver.
     """
     browser = initialize_browser()
+    wait_for_url_load(browser, url="https://www.frostbank.com/")
+    sleep_random_time(5 * constants.SPEED_FACTOR, 2 * constants.SPEED_FACTOR)
     execute_login(browser)
+    wait_for_url_load(browser, url="https://www.frostbank.com/mf/accounts/main")
+    sleep_random_time(5 * constants.SPEED_FACTOR, 2 * constants.SPEED_FACTOR)
     verify_login(browser)
     navigate_to_transfers(browser)
     for settlement_item in transfer_items:
         transfer_dict = initialize_transfer_dict(settlement_item)
         for order in transfer_dict:
-            sleep_random_time(10, min=9)
+            wait_for_url_load(browser, url="https://www.frostbank.com/mf/transfers/main")
+            sleep_random_time(5 * constants.SPEED_FACTOR, 2 * constants.SPEED_FACTOR)
             verify_navigation_to_transfers(browser)
             complete_transfer_form(browser, order)
             click_next(browser)
+            wait_for_url_load(browser, url="https://www.frostbank.com/mf/transfers/verify")
+            sleep_random_time(5 * constants.SPEED_FACTOR, 2 * constants.SPEED_FACTOR)
             submit_transfer(browser)
+            wait_for_url_load(browser, url="https://www.frostbank.com/mf/transfers/confirm")
+            sleep_random_time(5 * constants.SPEED_FACTOR, 2 * constants.SPEED_FACTOR)
             click_make_another_transfer(browser)
 
     browser.close()
@@ -261,30 +270,26 @@ def execute_login(browser):
     """
     Performs login by prompting by receiving username and password from user
     """
-    sleep_random_time(5 * constants.SPEED_FACTOR, min=2 * constants.SPEED_FACTOR)
-    user_field = browser.find_element_by_id("username-field")
-    sleep_random_time(5 * constants.SPEED_FACTOR, min=2 * constants.SPEED_FACTOR)
+    i = 0
+    try:
+        user_field = browser.find_element_by_id("username-field")
+    except:
+        i = i + 1
+        if i < 5:
+            sleep_random_time(3 * constants.SPEED_FACTOR, 2 * constants.SPEED_FACTOR)
+        else:
+            raise Exception('Unable to load main page. Please try again.')
     user_field.clear()
-    sleep_random_time(5 * constants.SPEED_FACTOR, min=2 * constants.SPEED_FACTOR)
     user = input("Enter Username: ")
     sleep_random_time(5 * constants.SPEED_FACTOR, min=2 * constants.SPEED_FACTOR)
     user_field.send_keys(user)
     sleep_random_time(5 * constants.SPEED_FACTOR, min=2 * constants.SPEED_FACTOR)
     pass_field = browser.find_element_by_id("password-field")
-    sleep_random_time(5 * constants.SPEED_FACTOR, min=2 * constants.SPEED_FACTOR)
     pass_field.clear()
-    sleep_random_time(5 * constants.SPEED_FACTOR, min=2 * constants.SPEED_FACTOR)
     pwd = getpass()
     sleep_random_time(5 * constants.SPEED_FACTOR, min=2 * constants.SPEED_FACTOR)
     pass_field.send_keys(pwd)
     pass_field.send_keys(Keys.RETURN)
-    
-    i = 0
-    while browser.current_url != "https://www.frostbank.com/mf/accounts/main":
-        i = i + 1
-        if i > 4:
-            print("Failed to reach main accounts page. Aborting, please try again.")
-        sleep_random_time(5, min=2)
 
 
 def verify_login(browser):
@@ -305,6 +310,14 @@ def navigate_to_transfers(browser):
         2. Down arrow
         3. Enter
     """
+    try:
+        transfers_tab = browser.find_element_by_id("tabTransfers")
+    except:
+        i = i + 1
+        if i < 5:
+            sleep_random_time(3 * constants.SPEED_FACTOR, 2 * constants.SPEED_FACTOR)
+        else:
+            raise Exception('Unable to load main accounts page. Please try again.')
     actions = ActionChains(browser)
     for _ in range(3):
         # actions.key_down(Keys.SHIFT)
@@ -386,14 +399,22 @@ def select_from_account(browser, order):
     """
     Select account to transfer funds from based on order.
     """
-    from_acct_dropdown = browser.find_element_by_id("from-account-list")
+    try:
+        from_acct_dropdown = browser.find_element_by_id("from-account-list")
+    except:
+        i = i + 1
+        if i < 5:
+            sleep_random_time(3 * constants.SPEED_FACTOR, 2 * constants.SPEED_FACTOR)
+        else:
+            raise Exception('Unable to load transfers page. Please try again.')
+
     from_acct_dropdown.click()
     sleep_random_time(5 * constants.SPEED_FACTOR, min=2 * constants.SPEED_FACTOR)
     from_acct_row = from_acct_dropdown.find_elements_by_xpath(
         f"//*[contains(text(), \"{order['from_acct_num']}\")]"
     )[0]
     from_acct_row.click()
-    sleep_random_time(5 * constants.SPEED_FACTOR, min=2 * constants.SPEED_FACTOR)
+    sleep_random_time(5 * constants.SPEED_FACTOR, min=2* constants.SPEED_FACTOR)
     
 
 def select_to_account(browser, order):
@@ -432,25 +453,48 @@ def click_next(browser):
     """
     next_btn = browser.find_element_by_id("btn-next")
     next_btn.click()
-    sleep_random_time(10, min=9)
 
 
 def submit_transfer(browser):
     """
     Submit transfer form by clicking appropriate button.
     """
-    submit_btn = browser.find_element_by_id("btn-submit")
+    try:
+        submit_btn = browser.find_element_by_id("btn-submit")
+    except:
+        i = i + 1
+        if i < 5:
+            sleep_random_time(3 * constants.SPEED_FACTOR, 2 * constants.SPEED_FACTOR)
+        else:
+            raise Exception('Unable to load confirmation page. Please try again.')
     submit_btn.click()
-    sleep_random_time(10, min=9)
 
 
 def click_make_another_transfer(browser):
     """
     Click "Make another transfer" button after submitting transfer
     """
-    submit_btn = browser.find_element_by_id("btn-submit")
+    try:
+        submit_btn = browser.find_element_by_id("btn-submit")
+    except:
+        i = i + 1
+        if i < 5:
+            sleep_random_time(3 * constants.SPEED_FACTOR, 2 * constants.SPEED_FACTOR)
+        else:
+            raise Exception('Unable to load completion page. Please try again.')
     submit_btn.click()
-    sleep_random_time(10, min=9)
+
+
+def wait_for_url_load(browser, url, wait_time=1.5, max_iter=10):
+    """
+    Sleep until URL has loaded and abort after 10 failed iterations.
+    """
+    i = 0
+    while browser.current_url != url:
+        i = i + 1
+        if i > max_iter:
+            print(f"Failed to reach {url}. Aborting, please try again.")
+        time.sleep(wait_time)
 
 
 if __name__ == "__main__":

@@ -271,14 +271,14 @@ def execute_login(browser):
     Performs login by prompting by receiving username and password from user
     """
     i = 0
-    try:
-        user_field = browser.find_element_by_id("username-field")
-    except:
-        i = i + 1
-        if i < 5:
+    while i < 5:
+        try:
+            user_field = browser.find_element_by_id("username-field")
+            break
+        except:
+            print("Cannot find username field. Waiting and trying again...")
             sleep_random_time(3 * constants.SPEED_FACTOR, 2 * constants.SPEED_FACTOR)
-        else:
-            raise Exception('Unable to load main page. Please try again.')
+            i = i + 1
     user_field.clear()
     user = input("Enter Username: ")
     sleep_random_time(5 * constants.SPEED_FACTOR, min=2 * constants.SPEED_FACTOR)
@@ -311,14 +311,14 @@ def navigate_to_transfers(browser):
         3. Enter
     """
     i = 0
-    try:
-        transfers_tab = browser.find_element_by_id("tabTransfers")
-    except:
-        i = i + 1
-        if i < 5:
+    while i < 5:
+        try:
+            transfers_tab = browser.find_element_by_id("tabTransfers")
+            break
+        except:
+            print ("Cannot find Transfers tab. Waiting and trying again...")
             sleep_random_time(3 * constants.SPEED_FACTOR, 2 * constants.SPEED_FACTOR)
-        else:
-            raise Exception('Unable to load main accounts page. Please try again.')
+            i = i + 1
     actions = ActionChains(browser)
     for _ in range(3):
         # actions.key_down(Keys.SHIFT)
@@ -401,15 +401,14 @@ def select_from_account(browser, order):
     Select account to transfer funds from based on order.
     """
     i = 0
-    try:
-        from_acct_dropdown = browser.find_element_by_id("from-account-list")
-    except:
-        i = i + 1
-        if i < 5:
+    while i < 5:
+        try:
+            from_acct_dropdown = browser.find_element_by_id("from-account-list")
+            break
+        except:
+            print("Cannot find list of accounts. Waiting and trying again...")
             sleep_random_time(3 * constants.SPEED_FACTOR, 2 * constants.SPEED_FACTOR)
-        else:
-            raise Exception('Unable to load transfers page. Please try again.')
-
+            i = i+1
     from_acct_dropdown.click()
     sleep_random_time(5 * constants.SPEED_FACTOR, min=2 * constants.SPEED_FACTOR)
     from_acct_row = from_acct_dropdown.find_elements_by_xpath(
@@ -462,14 +461,14 @@ def submit_transfer(browser):
     Submit transfer form by clicking appropriate button.
     """
     i = 0
-    try:
-        submit_btn = browser.find_element_by_id("btn-submit")
-    except:
-        i = i + 1
-        if i < 5:
+    while i < 5:
+        try:
+            submit_btn = browser.find_element_by_id("btn-submit")
+            break
+        except:
+            print("Cannot find submit button. Waiting and trying again...")
             sleep_random_time(3 * constants.SPEED_FACTOR, 2 * constants.SPEED_FACTOR)
-        else:
-            raise Exception('Unable to load confirmation page. Please try again.')
+            i = i + 1
     submit_btn.click()
 
 
@@ -478,14 +477,14 @@ def click_make_another_transfer(browser):
     Click "Make another transfer" button after submitting transfer
     """
     i = 0
-    try:
-        submit_btn = browser.find_element_by_id("btn-submit")
-    except:
-        i = i + 1
-        if i < 5:
+    while i < 5:
+        try:
+            submit_btn = browser.find_element_by_id("btn-submit")
+            break
+        except:
+            print("Cannot find submit button. Waiting and trying again...")
             sleep_random_time(3 * constants.SPEED_FACTOR, 2 * constants.SPEED_FACTOR)
-        else:
-            raise Exception('Unable to load completion page. Please try again.')
+            i = i + 1
     submit_btn.click()
 
 

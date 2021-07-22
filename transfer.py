@@ -310,6 +310,7 @@ def navigate_to_transfers(browser):
         2. Down arrow
         3. Enter
     """
+    i = 0
     try:
         transfers_tab = browser.find_element_by_id("tabTransfers")
     except:
@@ -399,6 +400,7 @@ def select_from_account(browser, order):
     """
     Select account to transfer funds from based on order.
     """
+    i = 0
     try:
         from_acct_dropdown = browser.find_element_by_id("from-account-list")
     except:
@@ -459,6 +461,7 @@ def submit_transfer(browser):
     """
     Submit transfer form by clicking appropriate button.
     """
+    i = 0
     try:
         submit_btn = browser.find_element_by_id("btn-submit")
     except:
@@ -474,6 +477,7 @@ def click_make_another_transfer(browser):
     """
     Click "Make another transfer" button after submitting transfer
     """
+    i = 0
     try:
         submit_btn = browser.find_element_by_id("btn-submit")
     except:
